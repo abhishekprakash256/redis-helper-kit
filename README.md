@@ -99,6 +99,11 @@ pytest tests/
 
 This will execute all test cases in the `tests` directory to verify the CRUD operations work as expected.
 
+## Note
+
+- use host as "localhost" when using not as under the docker container
+- use host as "redis' when using as under the docker container 
+
 ## Contributing
 
 Contributions are welcome! To contribute:
