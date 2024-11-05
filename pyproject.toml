@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "redis-helper-kit"
+version = "0.1.0"
+description = "The redis helper kit is a package used for CRUD operation in redis"
+authors = ["abhishekprakash256 <abhishekprakash47@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pytest = "^8.3.3"
+redis = "^5.0.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
