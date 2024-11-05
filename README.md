@@ -1,4 +1,4 @@
-# redis_helper_kit
+# Redis Helper Kit
 
 `redis_helper_kit` is a Python package that provides a convenient helper class for performing CRUD (Create, Read, Update, Delete) operations with Redis. It simplifies interactions with Redis by offering straightforward methods to manage Redis hashes, sets, and other data structures.
 
