@@ -2,7 +2,7 @@
 The file for making the redis crud operations
 """
 import json
-from connection import create_redis_client
+from .connection import create_redis_client
 
 
 

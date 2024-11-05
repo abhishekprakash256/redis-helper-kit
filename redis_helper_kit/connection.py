@@ -22,12 +22,12 @@ def create_redis_client(host_name):
         print(f"Failed to connect to Redis using host {host_name}: {e}")
     
     # If neither host works, raise an exception or return None
-    print("Failed to create Redis client with all host options.")
+    print(f"Failed to create Redis client with host name {host_name} options. " )
     
     return None
 
 
-redis_client = create_redis_client()
+#redis_client = create_redis_client()
 
 
 
