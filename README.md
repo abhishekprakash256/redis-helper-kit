@@ -13,14 +13,13 @@
 
 To install `redis_helper_kit`, clone this repository and then run:
 
-```bash
-pip install -e .
 ```
+git clone git@github.com:abhishekprakash256/redis-helper-kit.git
+cd redis-helper-kit
+pip install -r requirements.txt
 
-Alternatively, you can install it directly from PyPI (if published):
-
-```bash
-pip install redis_helper_kit
+#installing through pip as a package , standard appraoch , after github auth done
+pip install git+https://github.com/abhsihekprakash256/redis-helper-kit.git  
 ```
 
 ## Usage
