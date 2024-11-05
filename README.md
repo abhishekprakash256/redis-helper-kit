@@ -19,7 +19,7 @@ cd redis-helper-kit
 pip install -r requirements.txt
 
 #installing through pip as a package , standard appraoch , after github auth done
-pip install git+https://github.com/abhsihekprakash256/redis-helper-kit.git  
+pip install git+https://github.com/abhishekprakash256/redis-helper-kit.git  
 ```
 
 ## Usage
