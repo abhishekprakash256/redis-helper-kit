@@ -15,6 +15,7 @@ def redis_client():
     yield client
     client.close()
 """
+
 @pytest.fixture
 def redis_client():
     # Create a FakeRedis client
@@ -26,8 +27,8 @@ def redis_client():
 def redis_helper(redis_client):
     # Flush the Redis database before each test
     redis_client.flushdb()
-    # Create instance of Helper_fun with a sample hash and set name
-    return Helper_fun(hash_name="test_hash", set_name="test_set", host_name="localhost")
+    # Create instance of Helper_fun with FakeRedis client instead of a real Redis connection
+    return Helper_fun(hash_name="test_hash", set_name="test_set", host_name="localhost", redis_client=redis_client)
 
 
 def test_add_value_to_set(redis_helper):
