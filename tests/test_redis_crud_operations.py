@@ -5,13 +5,21 @@ import pytest
 import json
 from redis_helper_kit import Helper_fun
 from redis import Redis
+import fakeredis
 
 # Fixture for Redis client
+"""
 @pytest.fixture(scope="module")
 def redis_client():
     client = Redis(host="localhost", port=6379, db=0)
     yield client
     client.close()
+"""
+@pytest.fixture
+def redis_client():
+    # Create a FakeRedis client
+    return fakeredis.FakeRedis()
+
 
 # Fixture for Helper_fun with setup
 @pytest.fixture
@@ -20,6 +28,7 @@ def redis_helper(redis_client):
     redis_client.flushdb()
     # Create instance of Helper_fun with a sample hash and set name
     return Helper_fun(hash_name="test_hash", set_name="test_set", host_name="localhost")
+
 
 def test_add_value_to_set(redis_helper):
     redis_helper.add_value_to_set("test_value")
