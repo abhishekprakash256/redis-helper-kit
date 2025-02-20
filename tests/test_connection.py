@@ -7,7 +7,7 @@ import redis_helper_kit
 from unittest.mock import MagicMock, patch
 
 @pytest.fixture
-def mock_redis_client():
+def mock_redis_client():  
     # Create a mock Redis client
     mock_client = MagicMock()
     mock_client.ping.return_value = True  # Simulate a successful ping response
