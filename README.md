@@ -38,7 +38,7 @@ docker run -d --name redis --network my_network -p 6379:6379 redis:latest
 
 ### Running the usage file
 
-After running the docker container or bare metal redis
+After running the docker container or bare metal redis from root dir just above examples
 
 ```bash
 python3 -m examples.basic_usage
