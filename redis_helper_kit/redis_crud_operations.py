@@ -8,10 +8,14 @@ from .connection import create_redis_client
 
 class Helper_fun():
 
-    def __init__(self, hash_name, set_name,host_name):
+    def __init__(self, hash_name, set_name, host_name, redis_client=None):
         self.hash_name = hash_name
         self.set_name = set_name
-        self.redis_client = create_redis_client(host_name)
+        # If no redis_client is provided, create one using the host_name
+        if redis_client:
+            self.redis_client = redis_client
+        else:
+            self.redis_client = create_redis_client(host_name)
 
     def add_value_to_set(self,value):
         """
