@@ -217,7 +217,7 @@ jobs:
         run: pytest --maxfail=2 --disable-warnings -v
 ```
 
-🚀 **Now, every commit gets tested automatically!**  
+🚀 **Now, every commit gets tested automatically!**    
 
 ---
 
