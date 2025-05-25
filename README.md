@@ -60,25 +60,53 @@ redis_helper = Helper_fun(hash_name="my_hash", set_name="my_set", host_name="loc
 
 #### Add a Value to a Redis Set
 
-```python
-# Add a value to the set
+# Add a value to the default set
 redis_helper.add_value_to_set("example_value")
-```
 
-#### Add a Key-Value Pair to a Redis Hash
+# OR to a custom set
+redis_helper.add_value_to_set("another_value", set_name="custom_set")
 
-```python
-# Add a key-value pair to the hash
+# Add a key-value pair to the default hash
 redis_helper.add_value_to_hash("key1", "value1")
-```
 
-#### Retrieve a Value from a Redis Hash
+# OR to a custom hash
+redis_helper.add_value_to_hash("key2", "value2", hash_name="custom_hash")
 
-```python
-# Retrieve a value from the hash
+
+# Get value for a key in the default hash
 value = redis_helper.get_hash_value("key1")
 print(value)  # Output: value1
-```
+
+
+# Check if value exists in set
+exists = redis_helper.check_set_exist("example_value")
+
+# Check if key exists in hash
+exists = redis_helper.check_hash_exist("key1")
+
+
+# Iterate through all values in the default set
+for item in redis_helper.get_all_set_val():
+    print(item)
+
+# OR use a specific set name
+for item in redis_helper.get_all_set_val(set_name="custom_set"):
+    print(item)
+
+
+# Iterate through all key-value pairs in the default hash
+for entry in redis_helper.get_all_hash_val():
+    print(entry)
+
+# OR for a specific hash name
+for entry in redis_helper.get_all_hash_val(hash_name="custom_hash"):
+    print(entry)
+
+
+# Pop and return a random value from the set
+popped_value = redis_helper.pop_set_val()
+print(popped_value)
+
 
 #### Delete a Database
 
@@ -96,14 +124,7 @@ redis_helper.get_all_set_val()
 
 #### Store and Retrieve JSON Data
 
-```python
-# Store a list as JSON in a Redis hash
-redis_helper.store_list_hash_val("user_data", ["user1", "user2", "user3"])
 
-# Retrieve the list from Redis hash
-user_data = redis_helper.get_users_value_from_hash("user_data")
-print(user_data)  # Output: ["user1", "user2", "user3"]
-```
 
 ## Configuration
 
