@@ -6,180 +6,126 @@ from .connection import create_redis_client
 
 
 
-class Helper_fun():
+class Helper_fun:
 
-    def __init__(self, hash_name, set_name, host_name, redis_client=None):
-        self.hash_name = hash_name
-        self.set_name = set_name
-        # If no redis_client is provided, create one using the host_name
+    def __init__(self, default_hash_name=None, default_set_name=None, host_name=None, redis_client=None):
+        self.default_hash_name = default_hash_name
+        self.default_set_name = default_set_name
         if redis_client:
             self.redis_client = redis_client
         else:
             self.redis_client = create_redis_client(host_name)
 
-    def add_value_to_set(self,value):
+    # ----------------- SET METHODS -----------------
+
+    def add_value_to_set(self, value, set_name=None):
         """
-        The function to add value to the set 
+        The function to add the value to the set
         """
-        #add the value to the set 
+        set_name = set_name or self.default_set_name
+        res = self.redis_client.sadd(set_name, value)
+        return bool(res)
 
-        res = self.redis_client.sadd(self.set_name, value)
-
-        if res: 
-            print("Data added in set succesfully")
-        
-        else:
-            print("Failed to add data in set")
-    
-    
-    def add_value_to_hash(self, key , value):
+    def pop_set_val(self, set_name=None):
         """
-        The function to add value to the set 
+        The function to pop the value from the set
         """
-        #add the value to the set 
-
-        res = self.redis_client.hset(self.hash_name, key, value)
-
-        #testting the code
-        #print(type(key))
-        #print(type(value))
-
-        #print(res)
-
-        if res: 
-            print("Data added in hash succesfully")
-        
-        else:
-            print("Failed to add data in hash")
-
-    
-    def delete_db(self,db_name):
-        """
-        The function to delete the hash if exists 
-        and then delete the hash
-        """
-        # check the hash exists 
-        if self.redis_client.exists(db_name):
-            
-            #delete the hash or set 
-            self.redis_client.delete(db_name)
-            print("The db has been deleted succesfully")
-        
-        else:
-
-            print("The db doesn't exists")
-
-    
-    def pop_set_val(self):
-        """
-        The funcion to pop a value from the set 
-        """
-
-        res = self.redis_client.spop(self.set_name)
-
+        set_name = set_name or self.default_set_name
+        res = self.redis_client.spop(set_name)
         if res:
-            return res
-        
-        else:
-            return None
-    
-    def get_hash_value(self,hash_val):
-        """
-        The function to get the hash value 
-        """
-        res = self.redis_client.hget(self.hash_name, hash_val)
-        if res:
-            return res
-        else:
-            return "Value not found"
+            return res.decode() if isinstance(res, bytes) else res
+        return None
 
-    def check_hash_exist(self,hash_val):
+    def get_all_set_val(self, set_name=None):
         """
-        The function to check the hash value exist in the set and in the redis hash
+        The function to get all the values from the set
         """
-
-        hash_check = self.redis_client.hexists(self.hash_name, hash_val)
-        
-        if hash_check:
-            return True 
-        
-        else:
-            return False
-    
-    def get_all_set_val(self):
-        """
-        The function to get all the hash value 
-        """
-
-        set_members = self.redis_client.smembers(self.set_name)
-        
-        print("Values in Redis set :")
-        
+        set_name = set_name or self.default_set_name
+        set_members = self.redis_client.smembers(set_name)
         for member in set_members:
-            print(member)
-            
+            yield member.decode() if isinstance(member, bytes) else member
 
-    def get_all_hash_val(self):
+    def check_set_exist(self, value, set_name=None):
         """
-        The function to get all the set value 
+        The function to check if the value exists in the set
         """
-
-        hash_fields = self.redis_client.hgetall(self.hash_name)
-        print("\nFields and values in Redis hash ")
-        for field, value in hash_fields.items():
-            print(f"{field}: {value}")
+        set_name = set_name or self.default_set_name
+        set_check = self.redis_client.sismember(set_name, value)
+        return bool(set_check)
 
 
+
+
+        # ----------------- HASH METHODS -----------------
+
+    def add_value_to_hash(self, key, value, hash_name=None):
+        """
+        The function to add the value to the hash
+        """
+        hash_name = hash_name or self.default_hash_name
+        res = self.redis_client.hset(hash_name, key, value)
+        return bool(res)
+
+    def get_hash_value(self, key, hash_name=None):
+        """
+        The function to get the value from the hash
+        """
+        hash_name = hash_name or self.default_hash_name
+        res = self.redis_client.hget(hash_name, key)
+        if res:
+            return res.decode() if isinstance(res, bytes) else res
+        return None
+
+    def check_hash_exist(self, key, hash_name=None):
+        """
+        The function to check if the hash value exists
+        """
+        hash_name = hash_name or self.default_hash_name
+        hash_check = self.redis_client.hexists(hash_name, key)
+        return bool(hash_check)
+
+    def get_all_hash_val(self, hash_name=None):
+        """
+        The function to get all the values from the hash
+        """
+        hash_name = hash_name or self.default_hash_name
+        hash_fields = self.redis_client.hgetall(hash_name)
+        for key, value in hash_fields.items():
+            field_str = key.decode() if isinstance(key, bytes) else key
+            value_str = value.decode() if isinstance(value, bytes) else value
+            yield f"{field_str}: {value_str}"
+
+    def delete_hash_val(self, key, hash_name=None):
+        """
+        The function to delete the hash value
+        """
+        hash_name = hash_name or self.default_hash_name
+        res = self.redis_client.hdel(hash_name, key)
+        return bool(res)
+
+
+    # ----------------- DATABASE METHODS -----------------
+
+    def delete_db(self, db_name):
+        """
+        The function to delete the database
+        """
+        if self.redis_client.exists(db_name):
+            self.redis_client.delete(db_name)
+            return True
+        return False
+
+
+
+
+    """"
     def store_hash_val(self,hash_map):
-        """
-        The function to store all values in hash map
-        """
-
+ 
         hash_fields = self.redis_client.hgetall(self.hash_name)
         print("Fields and values in Redis hash ")
         for field, value in hash_fields.items():
             hash_map[field] = value
 
+    """
 
 
-    #------added the values to the redis hash --------------
-     
-    #the method to store the hash value in the list foramt
-
-    def store_list_hash_val(self,key,value):
-        """
-        The function to store the key and value (list) in hash set
-        """
-
-        uers_json = json.dumps(value)
-        self.redis_client.hset(self.hash_name,key,uers_json)   
-
-
-
-    #the method to show the values from the chat hash 
-    def get_users_value_from_hash(self,key):
-
-        # Retrieve and deserialize the list from JSON string
-        retrieved_data_str = self.redis_client.hget(self.hash_name, key)
-
-        if retrieved_data_str:
-            # Deserialize the JSON string to a Python list
-            retrieved_data_list = json.loads(retrieved_data_str)
-            return retrieved_data_list
-        
-        return "None"
-
-
-
-
-    def delete_hash_val(self,key):
-        """
-        The method to delete the hash value from the redis hash
-        """
-
-        res = self.redis_client.hdel(self.hash_name,key)
-
-        if res:
-            return "deleted succesfully"
-        else:
-            return "data not found"
