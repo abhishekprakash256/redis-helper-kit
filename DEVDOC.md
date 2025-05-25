@@ -214,7 +214,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run pytest
-        run: pytest --maxfail=2 --disable-warnings -v
+        run: pytest --maxfail=2 --disable-warnings -v    
 ```
 
 🚀 **Now, every commit gets tested automatically!**    
