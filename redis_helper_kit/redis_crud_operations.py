@@ -53,7 +53,23 @@ class Helper_fun:
         set_check = self.redis_client.sismember(set_name, value)
         return bool(set_check)
 
+    def get_set_len(self, set_name=None):
+        """
+        The function to get the length of the set
+        """
+        set_name = set_name or self.default_set_name
+        
+        set_len = self.redis_client.scard(set_name)
+        return set_len
+    
+    def delete_set_val(self, value, set_name=None):
+        """
+        The function to delete the value from the set
+        """
+        set_name = set_name or self.default_set_name
 
+        res = self.redis_client.srem(set_name, value)
+        return bool(res)
 
 
         # ----------------- HASH METHODS -----------------

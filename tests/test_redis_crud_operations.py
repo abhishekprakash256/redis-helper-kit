@@ -63,6 +63,17 @@ def test_get_all_set_val(redis_helper):
     assert "value1" in decoded_results
     assert "value2" in decoded_results
 
+def test_set_length(redis_helper):
+    redis_helper.add_value_to_set("value1")
+    redis_helper.add_value_to_set("value2")
+    assert redis_helper.get_set_len() == 2, "Set length does not match expected value."
+
+def test_delete_set_val(redis_helper):
+    redis_helper.add_value_to_set("test_value")
+    result = redis_helper.delete_set_val("test_value")
+    assert result == True
+    assert not redis_helper.redis_client.sismember("test_set", "test_value"), "Set value still exists after deletion."
+
 
 def test_get_all_hash_val(redis_helper):
     redis_helper.add_value_to_hash("key1", "value1")
